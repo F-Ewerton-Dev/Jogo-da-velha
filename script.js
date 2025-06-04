@@ -8,17 +8,26 @@ function login(name) {
   document.getElementById("login").style.display = "none";
   document.getElementById("game").style.display = "block";
 
-  // Conectar ao WebSocket
-  ws = new WebSocket(`ws://${window.location.host}/ws`);
+  // Conectar ao WebSocket (usar wss:// no Render)
+  const wsProtocol = window.location.protocol === "https:" ? "wss:" : "ws:";
+  ws = new WebSocket(`${wsProtocol}//${window.location.host}/ws`);
+
   ws.onopen = () => {
     ws.send(JSON.stringify({ type: "login", player: name }));
+    info.textContent = `Conectado! Escolhendo jogador ${name}...`;
   };
+
   ws.onmessage = (event) => {
     const message = JSON.parse(event.data);
     if (message.type === "gameState") {
       render(message.game);
     }
   };
+
+  ws.onerror = () => {
+    info.textContent = "Erro na conexão com o servidor. Tente recarregar a página.";
+  };
+
   ws.onclose = () => {
     info.textContent = "Conexão perdida. Tente recarregar a página.";
   };
@@ -54,6 +63,9 @@ function render(game) {
 }
 
 function play(index) {
-  if (!ws || ws.readyState !== WebSocket.OPEN) return;
+  if (!ws || ws.readyState !== WebSocket.OPEN) {
+    info.textContent = "Não conectado ao servidor. Tente recarregar.";
+    return;
+  }
   ws.send(JSON.stringify({ type: "play", index, player }));
 }
