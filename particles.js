@@ -31,7 +31,7 @@ function animate() {
   particles.forEach((p, index) => {
     ctx.globalAlpha = p.alpha;
     ctx.font = `${p.size}px Segoe UI`;
-    ctx.fillStyle = "#ff8c00";
+    ctx.fillStyle = "#ff0000";
     ctx.fillText(p.char, p.x, p.y);
 
     p.x += p.dx;
