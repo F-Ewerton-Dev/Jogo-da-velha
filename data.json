@@ -1,0 +1,6 @@
+{
+  "players": ["Ewerton", "Hellen"],
+  "turn": "Ewerton",
+  "board": [null, null, null, null, null, null, null, null, null],
+  "winner": null
+}
